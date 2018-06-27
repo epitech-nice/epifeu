@@ -89,5 +89,5 @@ app.post('/state', auth, function (req, res) {
   }});
 });
 
-app.listen(3000, '10.16.252.187');
+app.listen(3000, '0.0.0.0');
 console.log("app running at http://localhost:3000");
