@@ -3,7 +3,10 @@ var express = require('express'),
     axios = require('axios'),
     bodyParser = require('body-parser'),
     child_process = require('child_process'),
+    cookieParser = require('cookie-parser'),
     session = require('express-session');
+
+app.use(cookieParser());
 app.use(session({
     secret: '2C44-4D44-WppQ38S',
     resave: true,
