@@ -60,6 +60,11 @@ app.post('/login', function (req, res) {
           req.session.admin = true;
         }
       }
+      req.session.save(function(err) {
+        if (err) {
+          console.log(err);
+        }
+      })
       res.status(200).send({
         msg: "Success",
         data: {
