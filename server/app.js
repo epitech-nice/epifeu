@@ -13,7 +13,8 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
       maxAge: 30 * 60 * 1000,
-      httpOnly: true
+      httpOnly: true,
+      secure: false
     }
 }));
 
@@ -60,7 +61,6 @@ app.post('/login', function (req, res) {
           console.log(err);
         }
       })
-      req.session.cookie.test = true;
       res.status(200).send({
         msg: "Success",
         data: {
