@@ -7,7 +7,11 @@ var express = require('express'),
 app.use(session({
     secret: '2C44-4D44-WppQ38S',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 30 * 60 * 1000,
+      httpOnly: true
+    }
 }));
 
 var state = "RED";
