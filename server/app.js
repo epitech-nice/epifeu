@@ -58,7 +58,8 @@ app.post('/login', function (req, res) {
         data: {
           picture: req.session.picture,
           name: req.session.name,
-          admin: req.session.admin
+          admin: req.session.admin,
+          state: state
         }
       });
     })
