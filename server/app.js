@@ -27,11 +27,10 @@ app.use(bodyParser.json());
 
 // Authentication and Authorization Middleware
 var auth = function(req, res, next) {
-  console.log(req.session);
   if (req.session && req.session.admin === true)
     return next();
   else
-    return res.sendStatus(401);
+    return res.status(401).send({msg: "Unauthorized"});
 };
 
 // Login endpoint
@@ -92,6 +91,7 @@ app.post('/state', auth, function (req, res) {
     child_process.exec('gpio write 0 1');
     state = "RED";
   }
+  console.log("Status changé en [" + state + "] par [" + req.session.name + "]");
   res.send({msg: "Changed", data: {
     state: state
   }});
