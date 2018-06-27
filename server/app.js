@@ -60,6 +60,7 @@ app.post('/login', function (req, res) {
           console.log(err);
         }
       })
+      req.session.cookie.test = true;
       res.status(200).send({
         msg: "Success",
         data: {
