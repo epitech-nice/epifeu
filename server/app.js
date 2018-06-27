@@ -21,6 +21,9 @@ var state = "RED";
 child_process.exec('gpio mode 0 out');
 child_process.exec('gpio write 0 1');
 
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
 // Authentication and Authorization Middleware
 var auth = function(req, res, next) {
   console.log(req.session);
