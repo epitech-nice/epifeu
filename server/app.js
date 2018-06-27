@@ -21,14 +21,6 @@ var state = "RED";
 child_process.exec('gpio mode 0 out');
 child_process.exec('gpio write 0 1');
 
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
-app.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization");
-  next();
-})
 // Authentication and Authorization Middleware
 var auth = function(req, res, next) {
   console.log(req.session);
