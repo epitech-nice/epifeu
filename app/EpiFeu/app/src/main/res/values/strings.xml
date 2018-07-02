@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EpiFeu</string>
+
+    <string name="title_activity_main">EpiFeu</string>
+    <string name="setting">Setting</string>
+    <string name="param_tres">Paramètres</string>
+    <string name="se_d_connecter">Se déconnecter</string>
+</resources>

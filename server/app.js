@@ -25,7 +25,6 @@ child_process.exec('gpio write 0 1');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-// Authentication and Authorization Middleware
 var auth = function(req, res, next) {
   if (req.session && req.session.admin === true)
     return next();
@@ -33,7 +32,6 @@ var auth = function(req, res, next) {
     return res.status(401).send({msg: "Unauthorized"});
 };
 
-// Login endpoint
 app.post('/login', function (req, res) {
   if (!req.body.cookie) {
     res.status(401).send('login failed');
@@ -76,13 +74,11 @@ app.post('/login', function (req, res) {
   }
 });
 
-// Logout endpoint
 app.get('/logout', function (req, res) {
   req.session.destroy();
   res.send({msg: "Success"});
 });
 
-// Get content endpoint
 app.post('/state', auth, function (req, res) {
   if (state == "RED") {
     child_process.exec('gpio write 0 0');
@@ -93,6 +89,12 @@ app.post('/state', auth, function (req, res) {
   }
   console.log("Status changé en [" + state + "] par [" + req.session.name + "]");
   res.send({msg: "Changed", data: {
+    state: state
+  }});
+});
+
+app.get('/state', auth, function (req, res) {
+  res.send({msg: "State", data: {
     state: state
   }});
 });
