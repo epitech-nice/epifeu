@@ -26,6 +26,13 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 var auth = function(req, res, next) {
+  if (req.session)
+    return next();
+  else
+    return res.status(401).send({msg: "Unauthorized"});
+};
+
+var admin = function(req, res, next) {
   if (req.session && req.session.admin === true)
     return next();
   else
@@ -74,12 +81,12 @@ app.post('/login', function (req, res) {
   }
 });
 
-app.get('/logout', function (req, res) {
+app.get('/logout', auth, function (req, res) {
   req.session.destroy();
   res.send({msg: "Success"});
 });
 
-app.post('/state', auth, function (req, res) {
+app.post('/state', admin, function (req, res) {
   if (state == "RED") {
     child_process.exec('gpio write 0 0');
     state = "GREEN";
@@ -89,13 +96,15 @@ app.post('/state', auth, function (req, res) {
   }
   console.log("Status changé en [" + state + "] par [" + req.session.name + "]");
   res.send({msg: "Changed", data: {
+    admin: req.session.admin,
     state: state
   }});
 });
 
 app.get('/state', auth, function (req, res) {
   res.send({msg: "State", data: {
-    state: state
+    state: state,
+    admin: req.session.admin
   }});
 });
 

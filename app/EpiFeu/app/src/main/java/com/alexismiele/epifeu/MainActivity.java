@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                     Calendar rightNow = Calendar.getInstance();
                     int currentHour = rightNow.get(Calendar.HOUR_OF_DAY);
                     int day = rightNow.get(Calendar.DAY_OF_WEEK);
-                    if (day != Calendar.SATURDAY && day != Calendar.SUNDAY && ((currentHour >= 9 && currentHour <= 12) || (currentHour >= 14 && currentHour <= 18))) {
+                    if (data.getBoolean("admin") || (day != Calendar.SATURDAY && day != Calendar.SUNDAY && ((currentHour >= 9 && currentHour < 12) || (currentHour >= 14 && currentHour < 18)))) {
                         switch (data.getString("state")) {
                             case "RED":
                                 image.post(new Runnable() {
@@ -169,14 +169,13 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             handler.post(new Runnable() {
-                                @SuppressWarnings("unchecked")
                                 public void run() {
                                     getState();
                                 }
                             });
                         }
                     };
-                    timer.schedule(doAsynchronousTask, 100, 100);
+                    timer.schedule(doAsynchronousTask, 60000, 60000);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -222,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
                     Calendar rightNow = Calendar.getInstance();
                     int currentHour = rightNow.get(Calendar.HOUR_OF_DAY);
                     int day = rightNow.get(Calendar.DAY_OF_WEEK);
-                    if (day != Calendar.SATURDAY && day != Calendar.SUNDAY && ((currentHour >= 9 && currentHour <= 12) || (currentHour >= 14 && currentHour <= 18))) {
+                    if (data.getBoolean("admin") || (day != Calendar.SATURDAY && day != Calendar.SUNDAY && ((currentHour >= 9 && currentHour < 12) || (currentHour >= 14 && currentHour < 18)))) {
                         switch (data.getString("state")) {
                             case "RED":
                                 image.post(new Runnable() {
@@ -303,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                     Calendar rightNow = Calendar.getInstance();
                     int currentHour = rightNow.get(Calendar.HOUR_OF_DAY);
                     int day = rightNow.get(Calendar.DAY_OF_WEEK);
-                    if (day != Calendar.SATURDAY && day != Calendar.SUNDAY && ((currentHour >= 9 && currentHour <= 12) || (currentHour >= 14 && currentHour <= 18))) {
+                    if (data.getBoolean("admin") || (day != Calendar.SATURDAY && day != Calendar.SUNDAY && ((currentHour >= 9 && currentHour < 12) || (currentHour >= 14 && currentHour < 18)))) {
                         switch (data.getString("state")) {
                             case "RED":
                                 image.post(new Runnable() {
