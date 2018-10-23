@@ -5,6 +5,7 @@ var express = require('express'),
     child_process = require('child_process'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
+    localIP = require('quick-local-ip'),
     os = require('os');
 
 app.use(cookieParser());
@@ -19,8 +20,8 @@ app.use(session({
     }
 }));
 
-var ipAddress = getLocalIP();
-
+//var ipAddress = getLocalIP();
+var ipAddress = localIP.getLocalIP4();
 var state = "RED";
 child_process.exec('gpio mode 0 out');
 child_process.exec('gpio write 0 1');
@@ -38,16 +39,6 @@ var interfaces = os.networkInterfaces();
       }
     }
   }
-  setTimeout(function () {
-    process.on("exit", function () {
-        require("child_process").spawn(process.argv.shift(), process.argv, {
-            cwd: process.cwd(),
-            detached : true,
-            stdio: "inherit"
-        });
-    });
-    process.exit();
-  }, 5000);
 }
 
 var auth = function(req, res, next) {
