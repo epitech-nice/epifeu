@@ -4,7 +4,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     child_process = require('child_process'),
     cookieParser = require('cookie-parser'),
-    session = require('express-session');
+    session = require('express-session'),
+    localIP = require('quick-local-ip');
 
 app.use(cookieParser());
 app.use(session({
@@ -106,6 +107,10 @@ app.get('/state', auth, function (req, res) {
     state: state,
     admin: req.session.admin
   }});
+});
+
+app.get('/', function(req, res) {
+  res.status(200).send({msg: "Up", data: {ip: localIP.getLocalIP4()}});
 });
 
 app.listen(3000, '0.0.0.0');

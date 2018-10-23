@@ -3,7 +3,7 @@
 
     <string name="title_activity_main">EpiFeu</string>
     <string name="setting">Setting</string>
-    <string name="param_tres">Paramètres</string>
+    <string name="param_tres">Rafraichir serveur</string>
     <string name="se_d_connecter">Se déconnecter</string>
     <string name="le_bureau_est_actuellement_ferm">Le bureau est actuellement fermé</string>
     <string name="changer_le_feu">Changer le feu</string>

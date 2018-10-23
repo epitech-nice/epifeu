@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView close;
     private View error;
 
-    public static final String PREF_NAME = "url_server";
+    public static final String PREF_NAME = "params_epifeu";
+    private static String firebase_url = "https://epitechnice.page.link/V9Hh";
 
     static ColorFilter screen(int c) {
         return new LightingColorFilter(0xFFFFFFFF - c, c);
@@ -76,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
         Hawk.init(this).build();
 
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        url = prefs.getString("url", "http://192.168.43.47:3000/");
+        url = prefs.getString("url", null);
+        //url = "https://epitechnice.page.link/V9Hh";
 
         java.net.CookieManager manager = new java.net.CookieManager();
         CookieHandler.setDefault( manager  );
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         errorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                connect();
+                refreshUrl();
             }
         });
         button.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +107,42 @@ public class MainActivity extends AppCompatActivity {
                 changeState();
             }
         });
-        connect();
+        if (url == null) {
+            refreshUrl();
+        } else {
+            connect();
+        }
+    }
+
+    private void refreshUrl() {
+        JSONObject parameters = new JSONObject();
+        JsonObjectRequest request2 = new JsonObjectRequest(Request.Method.GET, firebase_url,
+                parameters,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject data = response.getJSONObject("data");
+                    url = data.getString("ip");
+                    SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
+                    editor.putString("url", url);
+                    editor.apply();
+                    connect();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = super.getHeaders();
+                return headers;
+            }
+        };
+        queue.add(request2);
     }
 
     private void connect() {
@@ -408,6 +445,7 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                 final EditText edittext = new EditText(MainActivity.this);
                 edittext.setText(url);
+                edittext.setEnabled(false);
                 alert.setMessage("Entrez l'url du serveur");
                 alert.setTitle("URL");
 
@@ -415,10 +453,10 @@ public class MainActivity extends AppCompatActivity {
 
                 alert.setPositiveButton("valider", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        url = edittext.getText().toString();
+                        /*url = edittext.getText().toString();
                         SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
                         editor.putString("url", url);
-                        editor.apply();
+                        editor.apply();*/
                     }
                 });
 
@@ -427,7 +465,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                alert.show();
+                //alert.show();
                 return true;
             case R.id.menu_main_logout:
                 logout();
