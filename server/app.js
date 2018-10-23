@@ -38,7 +38,16 @@ var interfaces = os.networkInterfaces();
       }
     }
   }
-  return "";
+  setTimeout(function () {
+    process.on("exit", function () {
+        require("child_process").spawn(process.argv.shift(), process.argv, {
+            cwd: process.cwd(),
+            detached : true,
+            stdio: "inherit"
+        });
+    });
+    process.exit();
+  }, 5000);
 }
 
 var auth = function(req, res, next) {
@@ -125,9 +134,9 @@ app.get('/state', auth, function (req, res) {
 });
 
 app.get('/', function(req, res) {
-  if (ipAddress == "127.0.0.1") {
+  /*if (ipAddress == "127.0.0.1") {
     ipAddress = getLocalIP();
-  }
+  }*/
 
   res.status(200).send({msg: "Up", data: {ip: ipAddress}});
 });
