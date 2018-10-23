@@ -4,7 +4,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     child_process = require('child_process'),
     cookieParser = require('cookie-parser'),
-    session = require('express-session');
+    session = require('express-session'),
+    os = require('os');
 
 app.use(cookieParser());
 app.use(session({
@@ -18,7 +19,7 @@ app.use(session({
     }
 }));
 
-var ipAddress = require('quick-local-ip').getLocalIP4();
+var ipAddress = getLocalIP();
 
 var state = "RED";
 child_process.exec('gpio mode 0 out');
@@ -26,6 +27,19 @@ child_process.exec('gpio write 0 1');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+function getLocalIP() {
+var interfaces = os.networkInterfaces();
+  for (var k in interfaces) {
+    for (var k2 in interfaces[k]) {
+      var address = interfaces[k][k2];
+      if (address.family === 'IPv4' && !address.internal && address.address != "127.0.0.1") {
+        return address.address;
+      }
+    }
+  }
+  return "";
+}
 
 var auth = function(req, res, next) {
   if (req.session)
@@ -112,8 +126,9 @@ app.get('/state', auth, function (req, res) {
 
 app.get('/', function(req, res) {
   if (ipAddress == "127.0.0.1") {
-    ipAddress = require('quick-local-ip').getLocalIP4();
+    ipAddress = getLocalIP();
   }
+
   res.status(200).send({msg: "Up", data: {ip: ipAddress}});
 });
 
