@@ -6,15 +6,20 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
     localIP = require('quick-local-ip'),
-    os = require('os');
+    os = require('os'),
+    fs = require('fs'),
+    MemoryStore = session.MemoryStore,
+    https = require('https');
 
 app.use(cookieParser());
 app.use(session({
     secret: '2C44-4D44-WppQ38S',
     resave: true,
     saveUninitialized: true,
+    store: new MemoryStore(),
+    maxAge: Date.now() + (24 * 60 * 60 * 1000),
     cookie: {
-      maxAge: 30 * 60 * 1000,
+      maxAge: Date.now() + (24 * 60 * 60 * 1000),
       httpOnly: true,
       secure: false
     }
@@ -132,5 +137,15 @@ app.get('/', function(req, res) {
   res.status(200).send({msg: "Up", data: {ip: ipAddress}});
 });
 
-app.listen(3000, '0.0.0.0');
+
+var sslOptions = {
+  key: fs.readFileSync('/home/pi/ssl/epifeu.key'),
+  cert: fs.readFileSync('/home/pi/ssl/epifeu.crt'),
+  passphrase: "epitech42"
+};
+//  key: fs.readFileSync('./ssl/epifeu.key'),
+
+https.createServer(sslOptions, app).listen(3000, '0.0.0.0');
+
+//app.listen(3000, '0.0.0.0');
 console.log("app running at http://localhost:3000");
